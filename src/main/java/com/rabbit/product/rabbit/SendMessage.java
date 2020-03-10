@@ -22,6 +22,8 @@ public class SendMessage implements RabbitTemplate.ReturnCallback {
     private String exchangeName;
     @Value("${rabbitmq.topic.trouble.exchangeName}")
     private String troubleExchangeName;
+    @Value("${rabbitmq.topic.cx.trouble.exchangeName}")
+    private String troubleCXExchangeName;
     @Value("${rabbitmq.topic.run.exchangeName}")
     private String runExchangeName;
     public void send(String mess) {
@@ -86,6 +88,21 @@ public class SendMessage implements RabbitTemplate.ReturnCallback {
         //System.out.println("Sender1 : " + mess.toString());
         //amqpTemplate.convertAndSend(exchangeName,"topic.message", sendMsg);
         rabbitTemplate.convertAndSend(troubleExchangeName,topicName, eleTroubleMq);
+        rabbitTemplate.setReturnCallback(this);
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            if (!ack) {
+                System.out.println("TopicSender消息发送失败" + cause + correlationData.toString());
+            } else {
+                System.out.println("TopicSender 消息发送成功 ");
+            }
+        });
+    }
+
+    public void sendCXTroubleTopic(String topicName, EleTroubleMq eleTroubleMq) {
+        //String sendMsg = mess + new Date();
+        //System.out.println("Sender1 : " + mess.toString());
+        //amqpTemplate.convertAndSend(exchangeName,"topic.message", sendMsg);
+        rabbitTemplate.convertAndSend(troubleCXExchangeName,topicName, eleTroubleMq);
         rabbitTemplate.setReturnCallback(this);
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             if (!ack) {

@@ -103,6 +103,42 @@ public class DemoController {
         return Response.ok();
     }
 
+    @RequestMapping(value = "sendCXTroubleTopic", method = RequestMethod.POST)
+    public Response sendCXTroubleTopic(@RequestBody Map<String, String> data) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String eleContentNo = data.get("eleContentNo");
+        String gzxxid = data.get("gzxxid");
+        String workorderId = data.get("workorderId");
+        String creationDate = data.get("creationDate");
+        String chgTime = data.get("chgTime");
+        String workorderNo = data.get("workorderNo");
+        String userName = data.get("userName");
+        String accId = data.get("accId");
+        EleTroubleMq eleTroubleMq = new EleTroubleMq();
+        eleTroubleMq.setACCEPT_USER_NAME("");
+        if(chgTime != null){
+            eleTroubleMq.setCHG_TIME(dateFormat.parse(chgTime).getTime());
+        }
+        eleTroubleMq.setCREATION_DATE(creationDate);
+        eleTroubleMq.setELE_CONTRACT_NO(eleContentNo);
+        eleTroubleMq.setELE_FAULT_ID("");
+        eleTroubleMq.setELE_ID("");
+        eleTroubleMq.setEST_ARRIVE_TIME("");
+        eleTroubleMq.setEXAMINE("");
+        eleTroubleMq.setGZXXID(gzxxid);
+        eleTroubleMq.setLEAVE_DATE("");
+        eleTroubleMq.setREPAIR("");
+        eleTroubleMq.setREPORT("");
+        eleTroubleMq.setWORKORDER_ID(workorderId);
+        eleTroubleMq.setRESCUED_TIME("");
+        eleTroubleMq.setWORKORDER_NO(workorderNo);
+        eleTroubleMq.setACCEPT_USER_NAME(userName);
+        eleTroubleMq.setAccId(accId);
+        //topic.queue.wanke.trouble.te
+        sendMessage.sendCXTroubleTopic("wo_chg_cx", eleTroubleMq);
+        return Response.ok();
+    }
+
     @RequestMapping(value = "sendTest", method = RequestMethod.POST)
     public Response sendTest(@Valid @RequestBody DemoRequestData data, Errors error){
         List<ObjectError> allErrors =  error.getAllErrors();

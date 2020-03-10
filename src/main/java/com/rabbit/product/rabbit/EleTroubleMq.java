@@ -46,6 +46,8 @@ public class EleTroubleMq {
     private String GZXXID;
     @JsonProperty("WORKORDER_NO")
     private String WORKORDER_NO;
+    @JsonProperty("accId")
+    private String accId;
 
     public String getWORKORDER_ID() {
         return WORKORDER_ID;
@@ -197,5 +199,13 @@ public class EleTroubleMq {
 
     public void setGZXXID(String GZXXID) {
         this.GZXXID = GZXXID;
+    }
+
+    public String getAccId() {
+        return accId;
+    }
+
+    public void setAccId(String accId) {
+        this.accId = accId;
     }
 }
